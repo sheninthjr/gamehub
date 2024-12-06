@@ -9,8 +9,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        secondary: "#071824",
+      },
+      fontFamily: {
+        superwoobly: ["SuperWoobly", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
     },
   },
