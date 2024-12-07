@@ -1,6 +1,7 @@
 import { WebSocket } from "ws";
 import { User } from "./User";
 import { Game } from "./Game";
+import { SocketManager } from "./SocketManager";
 
 export class GameManager {
   private users: User[];
@@ -37,6 +38,39 @@ export class GameManager {
             return;
           }
           game.player2 = user.userId;
+          SocketManager.getInstance().addUser(user,game.gameId);
+          this.pendingGameId = null;
+          const gameId = game.gameId;
+          const gameStarted = JSON.stringify({
+            type: "game_started",
+            payload: {
+              player1: game.player1,
+              player2: game.player2,
+              gameId
+            }
+          })
+          console.log("Game Started")
+          SocketManager.getInstance().broadcast(gameId,gameStarted);
+        } else {
+          const gameId = crypto.randomUUID();
+          const game = new Game(gameId,user.userId, null);
+          this.pendingGameId = gameId;
+          console.log(gameId)
+          this.games.push(game);
+          SocketManager.getInstance().addUser(user,gameId); 
+        }
+      }
+      if(message.type === 'moving') {
+        const gameId:string = message.payload.gameId;
+        const playerId:string = message.payload.playerId;
+        const row = message.payload.row;
+        const column = message.payload.column;
+        const symbol = message.payload.symbol;
+        const game = this.games.find((g) => g.gameId === gameId);
+        if(game) {
+          game.move(gameId,playerId,row,column,symbol);
+        } else {
+          console.log("No game found")
         }
       }
     });
