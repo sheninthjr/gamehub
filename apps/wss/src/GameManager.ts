@@ -38,7 +38,7 @@ export class GameManager {
             return;
           }
           game.player2 = user.userId;
-          SocketManager.getInstance().addUser(user,game.gameId);
+          SocketManager.getInstance().addUser(user, game.gameId);
           this.pendingGameId = null;
           const gameId = game.gameId;
           const gameStarted = JSON.stringify({
@@ -46,31 +46,29 @@ export class GameManager {
             payload: {
               player1: game.player1,
               player2: game.player2,
-              gameId
-            }
-          })
-          console.log("Game Started")
-          SocketManager.getInstance().broadcast(gameId,gameStarted);
+              gameId,
+            },
+          });
+          SocketManager.getInstance().broadcast(gameId, gameStarted);
         } else {
           const gameId = crypto.randomUUID();
-          const game = new Game(gameId,user.userId, null);
+          const game = new Game(gameId, user.userId, null);
           this.pendingGameId = gameId;
-          console.log(gameId)
           this.games.push(game);
-          SocketManager.getInstance().addUser(user,gameId); 
+          SocketManager.getInstance().addUser(user, gameId);
         }
       }
-      if(message.type === 'moving') {
-        const gameId:string = message.payload.gameId;
-        const playerId:string = message.payload.playerId;
+      if (message.type === "moving") {
+        const gameId: string = message.payload.gameId;
+        const playerId: string = message.payload.playerId;
         const row = message.payload.row;
-        const column = message.payload.column;
+        const col = message.payload.col;
         const symbol = message.payload.symbol;
         const game = this.games.find((g) => g.gameId === gameId);
-        if(game) {
-          game.move(gameId,playerId,row,column,symbol);
+        if (game) {
+          game.move(gameId, playerId, row, col, symbol);
         } else {
-          console.log("No game found")
+          console.log("No game found");
         }
       }
     });

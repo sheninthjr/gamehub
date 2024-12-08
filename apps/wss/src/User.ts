@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { randomUUID } from 'crypto';
+import { randomUUID } from "crypto";
 
 export class User {
   public socket: WebSocket;

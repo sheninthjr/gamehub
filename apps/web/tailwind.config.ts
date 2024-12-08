@@ -9,7 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        secondary: "#071824",
+        primary: "#0A0A0A",
+        secondary: "#151516",
       },
       fontFamily: {
         superwoobly: ["SuperWoobly", "sans-serif"],
