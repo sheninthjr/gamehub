@@ -25,7 +25,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     socket?.send(
       JSON.stringify({
         type: "join",
-      })
+      }),
     );
   }
 
@@ -86,7 +86,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
             col,
             symbol,
           },
-        })
+        }),
       );
       setLastMove(symbol);
       setGameStatus("PROGRESS");
@@ -98,7 +98,9 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   return (
     <div className="flex flex-col justify-start items-center h-screen">
       <div className="flex flex-col justify-center">
-        <div className="font-montserrat text-5xl font-extrabold pt-32">XOXO</div>
+        <div className="font-montserrat text-5xl font-extrabold pt-32">
+          XOXO
+        </div>
         <div className="self-center">
           You're <span className="font-extrabold text-lg">{symbol}</span>
         </div>
@@ -119,7 +121,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
               >
                 {col === "-" ? "" : col}
               </button>
-            ))
+            )),
           )}
         </div>
       )}

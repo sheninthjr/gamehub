@@ -3,6 +3,7 @@ import { PanelLeftOpen, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import { Sidebar } from "./Sidebar";
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -33,16 +34,13 @@ export function Navbar() {
               alt="user-profile"
               className="rounded-full"
             />
-            <div className="font-semibold text-lg font-montserrat">
-              {username}
-            </div>
           </div>
         )}
       </div>
       {toggleOpen && (
         <div className="fixed top-24 h-full shadow-lg max-w-6xl z-[999] w-full mx-auto">
-          <div className="w-1/4 bg-white/10 backdrop-blur-xl backdrop-brightness-75 h-[89%] rounded-xl">
-          <div className="text-lg font-semibold">Hello</div>
+          <div className="w-80 bg-white/10 backdrop-blur-xl backdrop-brightness-75 h-[89%] rounded-xl">
+            <Sidebar />
           </div>
         </div>
       )}

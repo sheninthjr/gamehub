@@ -32,7 +32,7 @@ export class Game {
     playerId: string,
     row: number,
     col: number,
-    symbol: string
+    symbol: string,
   ) {
     try {
       if (row < 0 || col < 0 || row >= 3 || col >= 3) {
@@ -63,16 +63,16 @@ export class Game {
         },
       });
       SocketManager.getInstance().broadcast(gameId, message);
-      if(this.checkForWin(this.board,symbol)) {
+      if (this.checkForWin(this.board, symbol)) {
         SocketManager.getInstance().broadcast(
           gameId,
           JSON.stringify({
             type: "game_over",
             payload: {
-              symbol
-            }
-          })
-        )
+              symbol,
+            },
+          }),
+        );
       }
     } catch (error) {
       console.error("Error while making move", error);
