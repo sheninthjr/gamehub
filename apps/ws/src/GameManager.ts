@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
 import { User } from "./User";
 import { Game } from "./Game";
-import { SocketManager } from "./SocketManager";
+import { RedisManager } from "./RedisManager";
 
 export class GameManager {
   private users: User[];
@@ -38,7 +38,11 @@ export class GameManager {
             return;
           }
           game.player2 = user.userId;
-          SocketManager.getInstance().addUser(user, game.gameId);
+          const userObject = this.users.find(x => x.userId === user.userId);
+          if(!userObject?.socket) {
+            return;
+          }
+          RedisManager.getInstance().subscribe(game.player2,game.gameId,userObject?.socket)
           this.pendingGameId = null;
           const gameId = game.gameId;
           const gameStarted = JSON.stringify({
@@ -49,13 +53,24 @@ export class GameManager {
               gameId,
             },
           });
-          SocketManager.getInstance().broadcast(gameId, gameStarted);
+          RedisManager.getInstance().publish(gameId, gameStarted);
         } else {
           const gameId = crypto.randomUUID();
           const game = new Game(gameId, user.userId, null);
           this.pendingGameId = gameId;
+          console.log(gameId)
+          const userObject = this.users.find(x => x.userId === user.userId);
+          if(!userObject?.socket) {
+            return;
+          }
           this.games.push(game);
-          SocketManager.getInstance().addUser(user, gameId);
+          RedisManager.getInstance().subscribe(user.userId, gameId, userObject?.socket);
+          RedisManager.getInstance().publish(gameId, JSON.stringify({
+            type: "waiting",
+            payload: {
+              message: "waiting"
+            }
+          }))
         }
       }
       if (message.type === "moving") {

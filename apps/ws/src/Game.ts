@@ -1,4 +1,4 @@
-import { SocketManager } from "./SocketManager";
+import { RedisManager } from "./RedisManager";
 
 export class Game {
   public gameId: string;
@@ -62,9 +62,9 @@ export class Game {
           symbol,
         },
       });
-      SocketManager.getInstance().broadcast(gameId, message);
+      RedisManager.getInstance().publish(gameId, message);
       if (this.checkForWin(this.board, symbol)) {
-        SocketManager.getInstance().broadcast(
+        RedisManager.getInstance().publish(
           gameId,
           JSON.stringify({
             type: "game_over",
