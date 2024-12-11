@@ -14,6 +14,9 @@ export function useSocket() {
     ws.onclose = () => {
       setSocket(null);
     };
-  }, []);
+    return () => {
+      ws.close();
+    }
+  }, [userId]);
   return socket;
 }

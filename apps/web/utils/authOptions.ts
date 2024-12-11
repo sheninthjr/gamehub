@@ -1,3 +1,4 @@
+import prisma from "db/client";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -11,10 +12,31 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session }) {
       try {
-        const userId = crypto.randomUUID();
-        session.user.id = userId;
-      } catch (error) {
-        console.error("Error while creating user");
+        if (
+          session?.user?.email &&
+          session?.user?.name &&
+          session?.user?.image
+        ) {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: session?.user?.email,
+            },
+          });
+          if (user) {
+            session.user.id = user.id;
+          } else {
+            const newUser = await prisma.user.create({
+              data: {
+                email: session?.user?.email,
+                name: session?.user?.name,
+                image: session?.user?.image,
+              },
+            });
+            session.user.id = newUser.id;
+          }
+        }
+      } catch (e) {
+        console.error("Error while storing the user in the database", e);
       }
       return session;
     },
