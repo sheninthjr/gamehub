@@ -16,7 +16,7 @@ export function useSocket() {
     };
     return () => {
       ws.close();
-    }
+    };
   }, [userId]);
   return socket;
 }

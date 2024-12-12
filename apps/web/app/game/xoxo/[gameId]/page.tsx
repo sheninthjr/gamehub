@@ -30,8 +30,8 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   function initJoin() {
     socket?.send(
       JSON.stringify({
-        type: "join_xoxo",
-      })
+        type: "xoxo_join",
+      }),
     );
   }
 
@@ -40,7 +40,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
       initJoin();
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        if (data.type === "game_started") {
+        if (data.type === "xoxo_game_started") {
           const player1 = data.payload.player1;
           setGameId(data.payload.gameId);
           if (player1 === userId) {
@@ -51,7 +51,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
           setGameStatus("STARTED");
           setIsDisabled(false);
         }
-        if (data.type === "move_made") {
+        if (data.type === "xoxo_move_made") {
           const row = data.payload.row;
           const col = data.payload.col;
           const symbol = data.payload.symbol;
@@ -63,13 +63,13 @@ export default function GameId({ params }: { params: { gameId: string } }) {
           setLastMove(symbol);
           setGameStatus("PROGRESS");
         }
-        if (data.type === "game_over") {
+        if (data.type === "xoxo_game_over") {
           const winner = data.payload.symbol;
           const result = data.payload.result;
           setResultStatus(result);
           setGameStatus("FINISHED");
         }
-        if (data.type === "chat_message") {
+        if (data.type === "xoxo_chat_message") {
           setMessages((prev) => [
             ...prev,
             { playerId: data.payload.playerId, message: data.payload.message },
@@ -92,7 +92,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
       setBoard(newBoard);
       socket?.send(
         JSON.stringify({
-          type: "moving",
+          type: "xoxo_moving",
           payload: {
             gameId,
             playerId: userId,
@@ -100,7 +100,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
             col,
             symbol,
           },
-        })
+        }),
       );
       setLastMove(symbol);
       setGameStatus("PROGRESS");
@@ -120,13 +120,13 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     if (chatInput.trim()) {
       socket?.send(
         JSON.stringify({
-          type: "chat_message",
+          type: "xoxo_chat_message",
           payload: {
             gameId,
             playerId: userId,
             message: chatInput.trim(),
           },
-        })
+        }),
       );
     }
     setChatInput("");
@@ -145,12 +145,12 @@ export default function GameId({ params }: { params: { gameId: string } }) {
         </div>
         {gameStatus === "FINISHED" ? (
           <div className="flex flex-col justify-center items-center max-w-6xl mx-auto pt-32">
-          <div className="text-lg md:text-4xl text-white font-extrabold flex justify-center items-center w-full h-32 rounded-lg shadow-lg">
-            {resultStatus === "draw"
-              ? "The match is a draw"
-              : `The winner of the match is ${lastMove}`}
+            <div className="text-lg md:text-4xl text-white font-extrabold flex justify-center items-center w-full h-32 rounded-lg shadow-lg">
+              {resultStatus === "draw"
+                ? "The match is a draw"
+                : `The winner of the match is ${lastMove}`}
+            </div>
           </div>
-        </div>
         ) : (
           <div className="grid grid-cols-3 gap-2 mt-4">
             {board.map((row, rowIndex) =>
@@ -163,7 +163,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
                 >
                   {col === "-" ? "" : col}
                 </button>
-              ))
+              )),
             )}
           </div>
         )}

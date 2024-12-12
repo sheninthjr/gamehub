@@ -1,6 +1,9 @@
-import { RedisManager } from "./RedisManager";
+import prisma from "db/client";
+import { RedisManager } from "../RedisManager";
 
-export class Game {
+type Result = "X" | "O";
+
+export class XoxoGame {
   public gameId: string;
   public player1: string;
   public player2: string | null;
@@ -27,7 +30,7 @@ export class Game {
     return undefined;
   }
 
-  move(
+  async move(
     gameId: string,
     playerId: string,
     row: number,
@@ -46,7 +49,7 @@ export class Game {
       const lst = this.lastMove(gameId);
       if (lst) {
         if (playerId == lst) {
-          console.error("Same player is moving again");
+          console.error("Same player is xoxo_moving again");
           return;
         }
       }
@@ -55,7 +58,7 @@ export class Game {
       moves.push(playerId);
       this.order.set(gameId, moves);
       const message = JSON.stringify({
-        type: "move_made",
+        type: "xoxo_move_made",
         payload: {
           row,
           col,
@@ -67,12 +70,53 @@ export class Game {
         RedisManager.getInstance().publish(
           gameId,
           JSON.stringify({
-            type: "game_over",
+            type: "xoxo_game_over",
             payload: {
+              result: "win",
               symbol,
             },
           }),
         );
+        await prisma.gameHistory.updateMany({
+          where: { gameId: gameId },
+          data: {
+            result: symbol as Result,
+            gameStatus: "GAMEOVER",
+          },
+        });
+        setTimeout(() => {
+          RedisManager.getInstance().unsubscribe(this.player1, gameId);
+          if (this.player2) {
+            RedisManager.getInstance().unsubscribe(this.player2, gameId);
+          }
+        }, 100);
+      }
+      if (this.isBoardFull()) {
+        RedisManager.getInstance().publish(
+          gameId,
+          JSON.stringify({
+            type: "xoxo_game_over",
+            payload: {
+              result: "draw",
+              symbol: "",
+            },
+          }),
+        );
+
+        await prisma.gameHistory.updateMany({
+          where: { gameId: gameId },
+          data: {
+            result: "DRAW",
+            gameStatus: "GAMEOVER",
+          },
+        });
+
+        setTimeout(() => {
+          RedisManager.getInstance().unsubscribe(this.player1, gameId);
+          if (this.player2) {
+            RedisManager.getInstance().unsubscribe(this.player2, gameId);
+          }
+        }, 100);
       }
     } catch (error) {
       console.error("Error while making move", error);
@@ -91,5 +135,9 @@ export class Game {
     )
       return true;
     return false;
+  }
+
+  isBoardFull(): boolean {
+    return this.board.every((row) => row.every((cell) => cell !== "-"));
   }
 }

@@ -32,7 +32,7 @@ export class RedisManager {
 
     this.subscriptions.set(
       userId,
-      (this.subscriptions.get(userId) || []).concat(gameId)
+      (this.subscriptions.get(userId) || []).concat(gameId),
     );
     this.reverseSubscriptions.set(gameId, {
       ...(this.reverseSubscriptions.get(gameId) || {}),
@@ -43,7 +43,6 @@ export class RedisManager {
     ) {
       this.subscriber.subscribe(gameId, (message) => {
         const users = this.reverseSubscriptions.get(gameId) || {};
-        console.log(users);
         Object.values(users).forEach(({ ws }) => {
           ws.send(message);
         });
@@ -56,7 +55,7 @@ export class RedisManager {
     if (subscriptions) {
       this.subscriptions.set(
         userId,
-        subscriptions.filter((s) => s !== gameId)
+        subscriptions.filter((s) => s !== gameId),
       );
     }
     delete this.reverseSubscriptions.get(gameId)?.[userId];

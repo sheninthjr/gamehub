@@ -8,42 +8,46 @@ datasource db {
 }
 
 model User {
-  id          String        @unique @default(uuid())
-  email       String        @unique
-  name        String
-  image       String
-  games       GameHistory[]
-  Participant Participant[]
-}
-
-model Game {
-  id           String        @unique @default(uuid())
-  gameMode     GameMode
-  histories    GameHistory[]
-  participants Participant[]
+  id    String        @unique @default(uuid())
+  email String        @unique
+  name  String
+  image String
+  games GameHistory[]
 }
 
 model GameHistory {
-  id     String @unique @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-  gameId String
-  game   Game   @relation(fields: [gameId], references: [id])
-
-  @@unique([userId, gameId])
+  id         String     @unique @default(uuid())
+  gameType   GameType
+  gameId     String
+  gameName   Game
+  gameStatus GameStatus
+  player1    String
+  player2    String?
+  result     Result?
+  userId     String
+  user       User       @relation(fields: [userId], references: [id])
 }
 
-model Participant {
-  id     String @unique @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-  gameId String
-  game   Game   @relation(fields: [gameId], references: [id])
-
-  @@unique([userId, gameId])
+enum Game {
+  XOXO
+  SUDOKU
+  MINES
+  CHESS
 }
 
-enum GameMode {
-  SINGLE_PLAYER
-  MULTI_PLAYER
+enum GameType {
+  SOLO
+  MULTI
+}
+
+enum GameStatus {
+  STARTED
+  PROGRESS
+  GAMEOVER
+}
+
+enum Result {
+  X
+  O
+  DRAW
 }
