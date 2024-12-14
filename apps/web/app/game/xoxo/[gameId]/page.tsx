@@ -2,9 +2,9 @@
 
 import { useSocket } from "@/hooks/useSocket";
 import { GAME_TYPE } from "@/types";
-import { Send, SendHorizonal } from "lucide-react";
+import { SendHorizonal } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function GameId({ params }: { params: { gameId: string } }) {
   const [gameId, setGameId] = useState("");
@@ -20,6 +20,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     { playerId: string; message: string }[]
   >([]);
   const [resultStatus, setResultStatus] = useState<"win" | "draw">();
+  const chatConntainerRef = useRef<HTMLDivElement>(null);
 
   const [board, setBoard] = useState<string[][]>([
     ["-", "-", "-"],
@@ -28,18 +29,17 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   ]);
 
   function initJoin() {
-    socket?.send(
-      JSON.stringify({
+    if (socket) {
+      socket?.sendMessage({
         type: "xoxo_join",
-      }),
-    );
+      });
+    }
   }
 
   useEffect(() => {
     if (socket) {
       initJoin();
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+      const handler = (data: any) => {
         if (data.type === "xoxo_game_started") {
           const player1 = data.payload.player1;
           setGameId(data.payload.gameId);
@@ -71,16 +71,21 @@ export default function GameId({ params }: { params: { gameId: string } }) {
         }
         if (data.type === "xoxo_chat_message") {
           setMessages((prev) => [
-            ...prev,
             { playerId: data.payload.playerId, message: data.payload.message },
+            ...prev,
           ]);
         }
+      };
+      const unsubscribe = socket.addMessageHandler(handler);
+      return () => {
+        unsubscribe();
+        socket.removeMessageHandler(handler);
       };
     }
   }, [socket]);
 
   const handleClick = (row: number, col: number) => {
-    if (board[row][col] === "-") {
+    if (board[row][col] === "-" && socket) {
       if (lastMove === symbol) {
         return;
       }
@@ -90,19 +95,17 @@ export default function GameId({ params }: { params: { gameId: string } }) {
       const newBoard = [...board];
       newBoard[row][col] = symbol;
       setBoard(newBoard);
-      socket?.send(
-        JSON.stringify({
-          type: "xoxo_moving",
-          payload: {
-            gameId,
-            playerId: userId,
-            row,
-            col,
-            symbol,
-          },
-        }),
-      );
-      setLastMove(symbol);
+      socket.sendMessage({
+        type: "xoxo_moving",
+        payload: {
+          gameId,
+          playerId: userId,
+          row,
+          col,
+          symbol,
+        },
+      }),
+        setLastMove(symbol);
       setGameStatus("PROGRESS");
     } else {
       console.log("Cell is occupied");
@@ -117,17 +120,15 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   };
 
   const sendMessage = () => {
-    if (chatInput.trim()) {
-      socket?.send(
-        JSON.stringify({
-          type: "xoxo_chat_message",
-          payload: {
-            gameId,
-            playerId: userId,
-            message: chatInput.trim(),
-          },
-        }),
-      );
+    if (chatInput.trim() && socket) {
+      socket.sendMessage({
+        type: "xoxo_chat_message",
+        payload: {
+          gameId,
+          playerId: userId,
+          message: chatInput.trim(),
+        },
+      });
     }
     setChatInput("");
   };
@@ -169,7 +170,10 @@ export default function GameId({ params }: { params: { gameId: string } }) {
         )}
       </div>
       <div className="bg-[#202020] self-center flex flex-col justify-between h-96 w-[90%] md:w-[60%] lg:w-[40%] lg:h-[50vh] mt-20 rounded-xl text-white p-5">
-        <div className="flex flex-col-reverse h-full overflow-y-auto">
+        <div
+          className="flex flex-col-reverse h-full overflow-y-auto"
+          ref={chatConntainerRef}
+        >
           {messages.map((msg, index) => (
             <div
               key={index}

@@ -1,21 +1,17 @@
-import { WEBSOCKET_URL } from "@/config";
+import { SocketManager } from "@/utils/socketManager";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export function useSocket() {
   const { data: session } = useSession();
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [socket, setSocket] = useState<SocketManager | null>(null);
   const userId = session?.user.id;
   useEffect(() => {
-    const ws = new WebSocket(`${WEBSOCKET_URL}?userId=${userId}`);
-    ws.onopen = () => {
-      setSocket(ws);
-    };
-    ws.onclose = () => {
-      setSocket(null);
-    };
+    const socketManager = SocketManager.getInstance();
+    socketManager.initialize(userId as string);
+    setSocket(socketManager);
     return () => {
-      ws.close();
+      socketManager.close();
     };
   }, [userId]);
   return socket;

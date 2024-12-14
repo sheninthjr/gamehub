@@ -30,20 +30,18 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   >([]);
 
   function init() {
-    socket?.send(
-      JSON.stringify({
+    if (socket) {
+      socket?.sendMessage({
         type: "mines_join",
-      }),
-    );
+      });
+    }
   }
 
   useEffect(() => {
     if (socket) {
       init();
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+      const handler = (data: any) => {
         if (data.type === "mines_gameId") {
-          console.log(data.gameId);
           setGameId(data.gameId);
         }
         if (data.type === "mines_click") {
@@ -67,21 +65,24 @@ export default function GameId({ params }: { params: { gameId: string } }) {
           }
         }
       };
+      const unsubscribe = socket.addMessageHandler(handler);
+      return () => {
+        unsubscribe();
+        socket.removeMessageHandler(handler);
+      };
     }
   }, [socket]);
 
   const handleClick = (row: number, col: number) => {
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          type: "mines_click",
-          payload: {
-            row,
-            col,
-            gameId,
-          },
-        }),
-      );
+      socket.sendMessage({
+        type: "mines_click",
+        payload: {
+          row,
+          col,
+          gameId,
+        },
+      });
     }
     console.log("Clicked");
   };

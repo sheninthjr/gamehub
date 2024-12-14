@@ -56,11 +56,9 @@ export default function GameId({ params }: { params: { gameId: string } }) {
 
   function init() {
     if (socket) {
-      socket.send(
-        JSON.stringify({
-          type: "sudoku_join",
-        }),
-      );
+      socket.sendMessage({
+        type: "sudoku_join",
+      });
     }
   }
 
@@ -91,8 +89,7 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   useEffect(() => {
     if (socket) {
       init();
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+      const handler = (data: any) => {
         if (data.type === "game_started") {
           setGameId(data.payload.gameId);
           setBoard(data.payload.board);
@@ -115,6 +112,11 @@ export default function GameId({ params }: { params: { gameId: string } }) {
           setMessage(data.payload.message);
           toast.success(data.payload.message);
         }
+      };
+      const unsubscribe = socket.addMessageHandler(handler);
+      return () => {
+        unsubscribe();
+        socket.removeMessageHandler(handler);
       };
     }
   }, [socket]);
@@ -154,17 +156,15 @@ export default function GameId({ params }: { params: { gameId: string } }) {
   const handleNumberSelect = (number: number) => {
     if (selectedCell) {
       if (socket) {
-        socket.send(
-          JSON.stringify({
-            type: "sudoku_click",
-            payload: {
-              row: selectedCell.row,
-              col: selectedCell.col,
-              gameId,
-              num: number,
-            },
-          }),
-        );
+        socket.sendMessage({
+          type: "sudoku_click",
+          payload: {
+            row: selectedCell.row,
+            col: selectedCell.col,
+            gameId,
+            num: number,
+          },
+        });
       }
       setSelectedCell(null);
     }

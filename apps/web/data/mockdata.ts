@@ -33,20 +33,20 @@ export const mockdata: MockData[] = [
     playing: "29",
     winningprobability: 0.9,
   },
-  {
-    id: "ecdb7264-a27e-4318-947d-e87f2e8e9412",
-    images:
-      "https://slotsparadise.com/the-beach/images/2022/12/how-to-play-mines-a-recall-of-another-game.webp",
-    title: "flappybird",
-    playing: "222",
-    winningprobability: 0.5,
-  },
-  {
-    id: "ecdb7264-a27e-4318-947d-e87f2e8e9412",
-    images:
-      "https://slotsparadise.com/the-beach/images/2022/12/how-to-play-mines-a-recall-of-another-game.webp",
-    title: "chess",
-    playing: "232",
-    winningprobability: 0.8,
-  },
+  // {
+  //   id: "ecdb7264-a27e-4318-947d-e87f2e8e9412",
+  //   images:
+  //     "https://slotsparadise.com/the-beach/images/2022/12/how-to-play-mines-a-recall-of-another-game.webp",
+  //   title: "flappybird",
+  //   playing: "222",
+  //   winningprobability: 0.5,
+  // },
+  // {
+  //   id: "ecdb7264-a27e-4318-947d-e87f2e8e9412",
+  //   images:
+  //     "https://slotsparadise.com/the-beach/images/2022/12/how-to-play-mines-a-recall-of-another-game.webp",
+  //   title: "chess",
+  //   playing: "232",
+  //   winningprobability: 0.8,
+  // },
 ];
