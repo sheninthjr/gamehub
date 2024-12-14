@@ -12,6 +12,7 @@ export class GameManager {
   private mines: MinesGame[];
   private sudoku: SudokuGame[];
   private pendingGameId: string | null;
+  private liveUser: Map<string, string[]> = new Map();
 
   constructor() {
     this.users = [];
@@ -27,14 +28,77 @@ export class GameManager {
   }
 
   removeUser(socket: WebSocket) {
+    const removedUser = this.users.find((u) => u.socket === socket);
     this.users = this.users.filter((user) => user.socket !== socket);
+    if (removedUser) {
+      for (const [id, userId] of this.liveUser.entries()) {
+        const updatedUserId = userId.filter((u) => u !== removedUser.userId);
+        if (updatedUserId.length === 0) {
+          this.liveUser.delete(id);
+        } else {
+          this.liveUser.set(id, updatedUserId);
+        }
+      }
+    }
   }
 
   private messageHandler(user: User) {
     user.socket.on("message", (data) => {
       const message = JSON.parse(data.toString());
+      if (message.type === "welcome") {
+        const mines =
+          this.liveUser.get("355a5c37-c2ba-481c-bdd3-99f4828aa49e")?.length ||
+          0;
+        const xoxo =
+          this.liveUser.get("141d4980-c376-4fe8-8c5b-11b1f6ab7196")?.length ||
+          0;
+        const sudoku =
+          this.liveUser.get("3eb59008-c962-4320-9904-84c5257e8c8d")?.length ||
+          0;
+        RedisManager.getInstance().subscribe(
+          user.userId,
+          "welcome",
+          user.socket,
+        );
+        RedisManager.getInstance().publish(
+          "welcome",
+          JSON.stringify({
+            type: "welcome",
+            payload: {
+              mines,
+              xoxo,
+              sudoku,
+            },
+          }),
+        );
+      }
       if (message.type === "xoxo_join") {
-        this.joinHandler(user);
+        const id = message.payload.id;
+        const currentUsers = this.liveUser.get(id) || [];
+        if (!currentUsers.includes(user.userId)) {
+          this.liveUser.set(id, [...currentUsers, user.userId]);
+        }
+        const mines =
+          this.liveUser.get("355a5c37-c2ba-481c-bdd3-99f4828aa49e")?.length ||
+          0;
+        const xoxo =
+          this.liveUser.get("141d4980-c376-4fe8-8c5b-11b1f6ab7196")?.length ||
+          0;
+        const sudoku =
+          this.liveUser.get("3eb59008-c962-4320-9904-84c5257e8c8d")?.length ||
+          0;
+        RedisManager.getInstance().publish(
+          "welcome",
+          JSON.stringify({
+            type: "welcome",
+            payload: {
+              mines,
+              xoxo,
+              sudoku,
+            },
+          }),
+        );
+        this.joinHandler(user, message);
       }
       if (message.type === "xoxo_moving") {
         this.movement(message);
@@ -43,6 +107,31 @@ export class GameManager {
         this.chatHandler(message);
       }
       if (message.type === "mines_join") {
+        const id = message.payload.id;
+        const currentUsers = this.liveUser.get(id) || [];
+        if (!currentUsers.includes(user.userId)) {
+          this.liveUser.set(id, [...currentUsers, user.userId]);
+        }
+        const mines =
+          this.liveUser.get("355a5c37-c2ba-481c-bdd3-99f4828aa49e")?.length ||
+          0;
+        const xoxo =
+          this.liveUser.get("141d4980-c376-4fe8-8c5b-11b1f6ab7196")?.length ||
+          0;
+        const sudoku =
+          this.liveUser.get("3eb59008-c962-4320-9904-84c5257e8c8d")?.length ||
+          0;
+        RedisManager.getInstance().publish(
+          "welcome",
+          JSON.stringify({
+            type: "welcome",
+            payload: {
+              mines,
+              xoxo,
+              sudoku,
+            },
+          }),
+        );
         const gameId = crypto.randomUUID();
         const playerId = user.userId;
         const game = new MinesGame(gameId, playerId);
@@ -66,6 +155,31 @@ export class GameManager {
         }
       }
       if (message.type === "sudoku_join") {
+        const id = message.payload.id;
+        const currentUsers = this.liveUser.get(id) || [];
+        if (!currentUsers.includes(user.userId)) {
+          this.liveUser.set(id, [...currentUsers, user.userId]);
+        }
+        const mines =
+          this.liveUser.get("355a5c37-c2ba-481c-bdd3-99f4828aa49e")?.length ||
+          0;
+        const xoxo =
+          this.liveUser.get("141d4980-c376-4fe8-8c5b-11b1f6ab7196")?.length ||
+          0;
+        const sudoku =
+          this.liveUser.get("3eb59008-c962-4320-9904-84c5257e8c8d")?.length ||
+          0;
+        RedisManager.getInstance().publish(
+          "welcome",
+          JSON.stringify({
+            type: "welcome",
+            payload: {
+              mines,
+              xoxo,
+              sudoku,
+            },
+          }),
+        );
         const gameId = crypto.randomUUID();
         const playerId = user.userId;
         const game = new SudokuGame(gameId, playerId);
@@ -95,7 +209,7 @@ export class GameManager {
     });
   }
 
-  private async joinHandler(user: User) {
+  private async joinHandler(user: User, message: any) {
     if (this.pendingGameId) {
       const game = this.games.find((g) => g.gameId === this.pendingGameId);
       if (!game) {
@@ -151,6 +265,7 @@ export class GameManager {
       });
     } else {
       const gameId = crypto.randomUUID();
+      const id = message.payload.id;
       const game = new XoxoGame(gameId, user.userId, null);
       this.pendingGameId = gameId;
       const userObject = this.users.find((x) => x.userId === user.userId);

@@ -6,7 +6,8 @@ import { SendHorizonal } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
-export default function GameId({ params }: { params: { gameId: string } }) {
+export default function GameId() {
+  const id = "141d4980-c376-4fe8-8c5b-11b1f6ab7196";
   const [gameId, setGameId] = useState("");
   const { data: session } = useSession();
   const userId = session?.user.id;
@@ -32,6 +33,9 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     if (socket) {
       socket?.sendMessage({
         type: "xoxo_join",
+        payload: {
+          id,
+        },
       });
     }
   }

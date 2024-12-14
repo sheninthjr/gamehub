@@ -3,7 +3,7 @@ import { UUID } from "crypto";
 export interface MockData {
   id: UUID;
   images: string;
-  title: string;
+  title: "mines" | "xoxo" | "sudoku" | "codehub";
   playing: string;
   winningprobability: number;
 }

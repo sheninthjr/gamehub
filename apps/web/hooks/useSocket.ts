@@ -6,13 +6,15 @@ export function useSocket() {
   const { data: session } = useSession();
   const [socket, setSocket] = useState<SocketManager | null>(null);
   const userId = session?.user.id;
+
   useEffect(() => {
-    const socketManager = SocketManager.getInstance();
-    socketManager.initialize(userId as string);
-    setSocket(socketManager);
-    return () => {
-      socketManager.close();
-    };
+    if (userId) {
+      const socketManager = SocketManager.getInstance();
+      if (!socketManager.isInitialized()) {
+        socketManager.initialize(userId);
+      }
+      setSocket(socketManager);
+    }
   }, [userId]);
   return socket;
 }

@@ -4,7 +4,8 @@ import { useSocket } from "@/hooks/useSocket";
 import { useState, useEffect, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
-export default function GameId({ params }: { params: { gameId: string } }) {
+export default function GameId() {
+  const id = "3eb59008-c962-4320-9904-84c5257e8c8d";
   const [board, setBoard] = useState<number[][]>([]);
   const socket = useSocket();
   const [gameId, setGameId] = useState<string>("");
@@ -58,6 +59,9 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     if (socket) {
       socket.sendMessage({
         type: "sudoku_join",
+        payload: {
+          id,
+        },
       });
     }
   }

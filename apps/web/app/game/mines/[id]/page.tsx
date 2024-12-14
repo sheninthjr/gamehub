@@ -4,7 +4,8 @@ import { BadgeDollarSign } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-export default function GameId({ params }: { params: { gameId: string } }) {
+export default function GameId() {
+  const id = "141d4980-c376-4fe8-8c5b-11b1f6ab7196";
   const { data: session } = useSession();
   const userId = session?.user.id;
   const [gameId, setGameId] = useState<string>("");
@@ -33,6 +34,9 @@ export default function GameId({ params }: { params: { gameId: string } }) {
     if (socket) {
       socket?.sendMessage({
         type: "mines_join",
+        payload: {
+          id,
+        },
       });
     }
   }
