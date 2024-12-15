@@ -30,6 +30,10 @@ export class GameManager {
   removeUser(socket: WebSocket) {
     const removedUser = this.users.find((u) => u.socket === socket);
     this.users = this.users.filter((user) => user.socket !== socket);
+    RedisManager.getInstance().unsubscribe(
+      removedUser?.userId as string,
+      "welcome",
+    );
     if (removedUser) {
       for (const [id, userId] of this.liveUser.entries()) {
         const updatedUserId = userId.filter((u) => u !== removedUser.userId);
@@ -106,6 +110,17 @@ export class GameManager {
       if (message.type === "xoxo_chat_message") {
         this.chatHandler(message);
       }
+      if (message.type === "xoxo_leave") {
+        const id = message.payload.id;
+        RedisManager.getInstance().unsubscribe(user.userId, "welcome");
+        const updatedUser = this.liveUser.get(id) || [];
+        const filteredUser = updatedUser.filter((u) => u !== user.userId);
+        if (filteredUser.length === 0) {
+          this.liveUser.delete(id);
+        } else {
+          this.liveUser.set(id, filteredUser);
+        }
+      }
       if (message.type === "mines_join") {
         const id = message.payload.id;
         const currentUsers = this.liveUser.get(id) || [];
@@ -152,6 +167,17 @@ export class GameManager {
           game.click(gameId, row, col, user.socket);
         } else {
           console.log("No game found");
+        }
+      }
+      if (message.type === "mines_leave") {
+        const id = message.payload.id;
+        RedisManager.getInstance().unsubscribe(user.userId, "welcome");
+        const updatedUser = this.liveUser.get(id) || [];
+        const filteredUser = updatedUser.filter((u) => u !== user.userId);
+        if (filteredUser.length === 0) {
+          this.liveUser.delete(id);
+        } else {
+          this.liveUser.set(id, filteredUser);
         }
       }
       if (message.type === "sudoku_join") {
@@ -204,6 +230,17 @@ export class GameManager {
           game.click(gameId, row, col, num, user.socket);
         } else {
           console.log("Game not found");
+        }
+      }
+      if (message.type === "sudoku_leave") {
+        const id = message.payload.id;
+        RedisManager.getInstance().unsubscribe(user.userId, "welcome");
+        const updatedUser = this.liveUser.get(id) || [];
+        const filteredUser = updatedUser.filter((u) => u !== user.userId);
+        if (filteredUser.length === 0) {
+          this.liveUser.delete(id);
+        } else {
+          this.liveUser.set(id, filteredUser);
         }
       }
     });

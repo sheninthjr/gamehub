@@ -120,6 +120,12 @@ export default function GameId() {
       const unsubscribe = socket.addMessageHandler(handler);
       return () => {
         unsubscribe();
+        socket.sendMessage({
+          type: "sudoku_leave",
+          payload: {
+            id,
+          },
+        });
         socket.removeMessageHandler(handler);
       };
     }

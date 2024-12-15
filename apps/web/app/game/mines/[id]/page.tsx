@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function GameId() {
-  const id = "141d4980-c376-4fe8-8c5b-11b1f6ab7196";
+  const id = "355a5c37-c2ba-481c-bdd3-99f4828aa49e";
   const { data: session } = useSession();
   const userId = session?.user.id;
   const [gameId, setGameId] = useState<string>("");
@@ -72,6 +72,12 @@ export default function GameId() {
       const unsubscribe = socket.addMessageHandler(handler);
       return () => {
         unsubscribe();
+        socket.sendMessage({
+          type: "mines_leave",
+          payload: {
+            id,
+          },
+        });
         socket.removeMessageHandler(handler);
       };
     }
