@@ -23,7 +23,7 @@ export function Navbar() {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="fixed top-0 z-[999] flex justify-between p-5 w-full max-w-6xl mx-auto mt-4 rounded-xl items-center bg-white/10 backdrop-blur-xl backdrop-brightness-75">
+      <div className="fixed top-0 z-[999] flex justify-between p-5 w-full max-w-7xl mx-auto mt-4 rounded-xl items-center bg-white/10 backdrop-blur-xl backdrop-brightness-75">
         <button onClick={handleToggleClick}>
           {!toggleOpen ? <PanelLeftOpen /> : <PanelRightOpen />}
         </button>
@@ -60,7 +60,7 @@ export function Navbar() {
         </div>
       </div>
       {toggleOpen && (
-        <div className="fixed top-24 h-full shadow-lg max-w-6xl z-[999] w-full mx-auto">
+        <div className="fixed top-24 h-full shadow-lg max-w-7xl z-[999] w-full mx-auto">
           <div className="w-80 bg-white/10 backdrop-blur-xl backdrop-brightness-75 h-[87%] rounded-xl">
             <Sidebar setToggleOpen={setToggleOpen} />
           </div>

@@ -11,3 +11,5 @@ export interface MockData {
 export type GAME_TYPE = "WAITING" | "STARTED" | "PROGRESS" | "FINISHED";
 
 export type stateBoolean = true | false;
+
+export type LANGUAGE_TYPE = "python" | "cpp" | "java" | "javascript";
