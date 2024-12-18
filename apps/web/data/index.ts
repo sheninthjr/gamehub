@@ -1,23 +1,23 @@
 export type LANGUAGE_TYPE = "cpp" | "python" | "java";
 
 export interface ProblemType {
-    id: string;
-    title: string;
-    problemStatement: string;
-    code: {
-        python: string;
-        cpp: string;
-        java: string;
-    };
-    language: LANGUAGE_TYPE[];
-    totalTestCase: number;
+  problemId: string;
+  title: string;
+  problemStatement: string;
+  code: {
+    python: string;
+    cpp: string;
+    java: string;
+  };
+  language: LANGUAGE_TYPE[];
+  totalTestCase: number;
 }
 
 export const Problems: ProblemType[] = [
-    {
-        id: "1",
-        title: "Insertion Sort",
-        problemStatement: `# Insertion Sort Problem
+  {
+    problemId: "1",
+    title: "Insertion Sort",
+    problemStatement: `# Insertion Sort Problem
 
 ## Problem Description
 Given an array, implement the insertion sort algorithm to sort the array in ascending order.
@@ -50,8 +50,8 @@ Given an array, implement the insertion sort algorithm to sort the array in asce
 
 ## Explanation
 Insertion sort works by building the final sorted array one item at a time. It is much less efficient on large lists than more advanced algorithms such as quicksort, heapsort, or merge sort.`,
-        code: {
-            python: `def insertion_sort(arr):
+    code: {
+      python: `def insertion_sort(arr):
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
@@ -60,20 +60,8 @@ Insertion sort works by building the final sorted array one item at a time. It i
             j -= 1
         arr[j + 1] = key
     return arr
-
-def main():
-    test_cases = [
-        [4, 2, 5, 3, 1],
-        [11, 4, 200]
-    ]
-    
-    for arr in test_cases:
-        sorted_arr = insertion_sort(arr)
-        print(' '.join(map(str, sorted_arr)))
-
-if __name__ == "__main__":
-    main()`,
-            cpp: `#include <iostream>
+`,
+      cpp: `#include <iostream>
 #include <vector>
 
 void insertion_sort(std::vector<int>& arr) {
@@ -87,25 +75,8 @@ void insertion_sort(std::vector<int>& arr) {
         arr[j + 1] = key;
     }
 }
-
-int main() {
-    std::vector<std::vector<int>> test_cases = {
-        {4, 2, 5, 3, 1},
-        {11, 4, 200}
-    };
-    
-    for (auto& arr : test_cases) {
-        insertion_sort(arr);
-        
-        for (int num : arr) {
-            std::cout << num << " ";
-        }
-        std::cout << std::endl;
-    }
-    
-    return 0;
-}`,
-            java: `public class InsertionSort {
+`,
+      java: `public class InsertionSort {
     public static void insertionSort(int[] arr) {
         for (int i = 1; i < arr.length; i++) {
             int key = arr[i];
@@ -118,269 +89,232 @@ int main() {
             arr[j + 1] = key;
         }
     }
-    
-    public static void main(String[] args) {
-        int[][] testCases = {
-            {4, 2, 5, 3, 1},
-            {11, 4, 200}
-        };
-        
-        for (int[] arr : testCases) {
-            insertionSort(arr);
-            
-            for (int num : arr) {
-                System.out.print(num + " ");
-            }
-            System.out.println();
-        }
-    }
 }`,
-        },
-        language: ["python", "cpp", "java"],
-        totalTestCase: 5
     },
-    {
-        id: "2",
-        title: "Binary Search",
-        problemStatement: `# Binary Search Problem
+    language: ["python", "cpp", "java"],
+    totalTestCase: 5,
+  },
+  {
+    problemId: "2",
+    title: "Longest Palindrome in String",
+    problemStatement: `# Longest Palindrome in String Problem
 
 ## Problem Description
-Implement the binary search algorithm to find the index of a target element in a sorted array.
+Given a string s, find the longest palindrome substring in s. If there are multiple valid substrings, find the first one.
 
 ## Input Format
-- The first line contains 'T' denoting the number of test cases.
-- For each test case:
-  - First line contains 'n' number of elements in the array
-  - Second line contains 'n' sorted space-separated integers
-  - Third line contains the target element to search
+- The first line contains an integer 'T' denoting the number of test cases.
+- For each test case, the input has one line with the string 's'.
+
+## Output Format
+- For each test case, output one line with string 'p' denoting the longest palindrome substring.
 
 ## Sample Input
 \`\`\`
-2
 5
-1 3 5 7 9
-5
-6
-1 2 3 4 5 6
-4
+mississippi
+avcccvbgf
+abcdc
+a
+abc
 \`\`\`
-
-## Output Format
-- For each test case, print the index of the target element (0-based indexing)
-- If element is not found, print -1
 
 ## Sample Output
 \`\`\`
-2
-5
+ississi
+vcccv
+cdc
+a
+a
 \`\`\`
 
 ## Constraints
-- 1 ≤ T ≤ 10
-- 1 ≤ N ≤ 1000
-- 1 ≤ array elements ≤ 10^6`,
-        code: {
-            python: `def binary_search(arr, target):
-    left, right = 0, len(arr) - 1
-    
-    while left <= right:
-        mid = (left + right) // 2
-        
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            left = mid + 1
-        else:
-            right = mid - 1
-    
-    return -1
+- 1 ≤ T ≤ 100
+- 1 ≤ n ≤ 1000
+- Characters of string are lowercase English characters.
 
-def main():
-    test_cases = [
-        ([1, 3, 5, 7, 9], 5),
-        ([1, 2, 3, 4, 5, 6], 4)
-    ]
-    
-    for arr, target in test_cases:
-        result = binary_search(arr, target)
-        print(result)
+## Explanation
+A palindrome is a string that reads the same forward and backward. For example, "ississi" is a palindrome because it reads the same in both directions. If there are multiple valid solutions, the first occurrence should be returned.`,
+    code: {
+      python: `def longest_palindrome(s):
+    n = len(s)
+    dp = [[False] * n for _ in range(n)]
+    start, max_length = 0, 1
 
-if __name__ == "__main__":
-    main()`,
-            cpp: `#include <iostream>
+    for i in range(n):
+        dp[i][i] = True
+
+    for length in range(2, n + 1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            if s[i] == s[j]:
+                if length == 2 or dp[i + 1][j - 1]:
+                    dp[i][j] = True
+                    if length > max_length:
+                        start, max_length = i, length
+    return s[start:start + max_length]
+`,
+      cpp: `#include <string>
 #include <vector>
 
-int binary_search(std::vector<int>& arr, int target) {
-    int left = 0, right = arr.size() - 1;
-    
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        
-        if (arr[mid] == target) {
-            return mid;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    
-    return -1;
-}
+std::string longest_palindrome(const std::string& s) {
+    int n = s.size();
+    std::vector<std::vector<bool>> dp(n, std::vector<bool>(n, false));
+    int start = 0, max_length = 1;
 
-int main() {
-    std::vector<std::pair<std::vector<int>, int>> test_cases = {
-        {{1, 3, 5, 7, 9}, 5},
-        {{1, 2, 3, 4, 5, 6}, 4}
-    };
-    
-    for (auto& test_case : test_cases) {
-        int result = binary_search(test_case.first, test_case.second);
-        std::cout << result << std::endl;
+    for (int i = 0; i < n; i++) {
+        dp[i][i] = true;
     }
-    
-    return 0;
-}`,
-            java: `public class BinarySearch {
-    public static int binarySearch(int[] arr, int target) {
-        int left = 0, right = arr.length - 1;
-        
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            
-            if (arr[mid] == target) {
-                return mid;
-            } else if (arr[mid] < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
+
+    for (int length = 2; length <= n; length++) {
+        for (int i = 0; i <= n - length; i++) {
+            int j = i + length - 1;
+            if (s[i] == s[j]) {
+                if (length == 2 || dp[i + 1][j - 1]) {
+                    dp[i][j] = true;
+                    if (length > max_length) {
+                        start = i;
+                        max_length = length;
+                    }
+                }
             }
         }
-        
-        return -1;
     }
-    
-    public static void main(String[] args) {
-        int[][] arrays = {
-            {1, 3, 5, 7, 9},
-            {1, 2, 3, 4, 5, 6}
-        };
-        
-        int[] targets = {5, 4};
-        
-        for (int i = 0; i < arrays.length; i++) {
-            int result = binarySearch(arrays[i], targets[i]);
-            System.out.println(result);
+    return s.substr(start, max_length);
+}
+`,
+      java: `public class LongestPalindrome {
+    public static String longestPalindrome(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+        int start = 0, maxLength = 1;
+
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = true;
         }
+
+        for (int length = 2; length <= n; length++) {
+            for (int i = 0; i <= n - length; i++) {
+                int j = i + length - 1;
+                if (s.charAt(i) == s.charAt(j)) {
+                    if (length == 2 || dp[i + 1][j - 1]) {
+                        dp[i][j] = true;
+                        if (length > maxLength) {
+                            start = i;
+                            maxLength = length;
+                        }
+                    }
+                }
+            }
+        }
+        return s.substring(start, start + maxLength);
     }
 }`,
-        },
-        language: ["python", "cpp", "java"],
-        totalTestCase: 2
     },
-    {
-        id: "3",
-        title: "Palindrome Number Check",
-        problemStatement: `# Palindrome Number Check Problem
+    language: ["python", "cpp", "java"],
+    totalTestCase: 5,
+  },
+  {
+    problemId: "3",
+    title: "Subset Sum",
+    problemStatement: `# Subset Sum Problem
 
 ## Problem Description
-Implement a function to check if a given number is a palindrome.
+Given an array of integers A and a target value target, find whether there exists a subset in the array A where their sum is equal to target.
 
 ## Input Format
-- The first line contains 'T' denoting the number of test cases.
-- Next T lines contain a single integer to be checked.
+- The first line contains an integer 'T', denoting the number of test cases.
+- For each test case, the input has three lines:
+  1. An integer 'n' denoting the length of the array A.
+  2. n space-separated integers denoting the elements of the array A.
+  3. An integer 'target' denoting the target value.
+
+## Output Format
+For each test case, output 1 if a subset exists whose sum equals target, otherwise output 0.
 
 ## Sample Input
 \`\`\`
-3
-121
--121
-10
+2
+5
+1 1 2 3 4
+5
+5
+1 3 1 3 4
+20
 \`\`\`
-
-## Output Format
-- For each test case, print "true" if the number is a palindrome, "false" otherwise.
 
 ## Sample Output
 \`\`\`
-true
-false
-false
+1
+0
 \`\`\`
 
 ## Constraints
-- -2^31 ≤ number ≤ 2^31 - 1`,
-        code: {
-            python: `def is_palindrome(num):
-    # Negative numbers are not palindromes
-    if num < 0:
-        return False
-    
-    # Convert to string and check if it reads the same backwards
-    return str(num) == str(num)[::-1]
+- 1 ≤ T ≤ 100
+- 1 ≤ n ≤ 16
+- 1 ≤ Ai ≤ 500
+- 1 ≤ target ≤ 500
 
-def main():
-    test_cases = [121, -121, 10]
-    
-    for num in test_cases:
-        print(str(is_palindrome(num)).lower())
+## Explanation
+In the first test case, the subset [1, 1, 3] has a sum equal to 5, so the output is 1. In the second test case, no subset can sum up to 20, so the output is 0.`,
+    code: {
+      python: `def subset_sum(arr, target):
+    n = len(arr)
+    dp = [[False] * (target + 1) for _ in range(n + 1)]
+    for i in range(n + 1):
+        dp[i][0] = True
+    for i in range(1, n + 1):
+        for j in range(1, target + 1):
+            if arr[i - 1] > j:
+                dp[i][j] = dp[i - 1][j]
+            else:
+                dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i - 1]]
+    return dp[n][target]
+`,
+      cpp: `#include <iostream>
+#include <vector>
 
-if __name__ == "__main__":
-    main()`,
-            cpp: `#include <iostream>
-#include <string>
-#include <algorithm>
-
-bool isPalindrome(int num) {
-    // Negative numbers are not palindromes
-    if (num < 0) {
-        return false;
+bool subset_sum(const std::vector<int>& arr, int target) {
+    int n = arr.size();
+    std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(target + 1, false));
+    for (int i = 0; i <= n; i++) {
+        dp[i][0] = true;
     }
-    
-    // Convert to string
-    std::string str_num = std::to_string(num);
-    std::string reversed_num = str_num;
-    
-    // Reverse the string
-    std::reverse(reversed_num.begin(), reversed_num.end());
-    
-    // Compare original and reversed
-    return str_num == reversed_num;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= target; j++) {
+            if (arr[i - 1] > j) {
+                dp[i][j] = dp[i - 1][j];
+            } else {
+                dp[i][j] = dp[i - 1][j] || dp[i - 1][j - arr[i - 1]];
+            }
+        }
+    }
+    return dp[n][target];
 }
+`,
+      java: `import java.util.*;
 
-int main() {
-    int test_cases[] = {121, -121, 10};
-    
-    for (int num : test_cases) {
-        std::cout << (isPalindrome(num) ? "true" : "false") << std::endl;
-    }
-    
-    return 0;
-}`,
-            java: `public class PalindromeNumber {
-    public static boolean isPalindrome(int num) {
-        // Negative numbers are not palindromes
-        if (num < 0) {
-            return false;
+public class SubsetSum {
+    public static boolean subsetSum(int[] arr, int target) {
+        int n = arr.length;
+        boolean[][] dp = new boolean[n + 1][target + 1];
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = true;
         }
-        
-        // Convert to string
-        String strNum = String.valueOf(num);
-        
-        // Check palindrome by comparing with reversed string
-        return strNum.equals(new StringBuilder(strNum).reverse().toString());
-    }
-    
-    public static void main(String[] args) {
-        int[] testCases = {121, -121, 10};
-        
-        for (int num : testCases) {
-            System.out.println(isPalindrome(num));
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= target; j++) {
+                if (arr[i - 1] > j) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - arr[i - 1]];
+                }
+            }
         }
+        return dp[n][target];
     }
 }`,
-        },
-        language: ["python", "cpp", "java"],
-        totalTestCase: 3
-    }
+    },
+    language: ["python", "cpp", "java"],
+    totalTestCase: 5,
+  },
 ];

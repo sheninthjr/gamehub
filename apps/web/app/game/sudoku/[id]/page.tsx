@@ -235,7 +235,7 @@ export default function GameId() {
                       <div
                         ref={popupRef}
                         className="absolute z-50 top-full mt-2 left-1/2 transform -translate-x-1/2 
-                    bg-black/90
+                    bg-neutral-200
                     rounded-lg shadow-lg p-2 flex flex-wrap gap-1 
                     justify-center items-center w-64"
                       >

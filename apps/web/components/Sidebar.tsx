@@ -22,7 +22,7 @@ export function Sidebar({
       <div className="flex flex-col justify-start space-y-8">
         <Link
           href="/"
-          className="flex gap-3 text-2xl font-extrabold"
+          className="flex gap-3 text-xl font-mono items-center font-bold"
           onClick={onClickLink}
         >
           <Home className="h-8 w-8" />
@@ -30,7 +30,7 @@ export function Sidebar({
         </Link>
         <Link
           href="/dashboard"
-          className="flex gap-3 text-2xl font-extrabold"
+          className="flex gap-3 text-xl font-mono items-center font-bold"
           onClick={onClickLink}
         >
           <LucideLayoutDashboard className="h-8 w-8" />
@@ -38,7 +38,7 @@ export function Sidebar({
         </Link>
         <Link
           href="/history"
-          className="flex gap-3 text-2xl font-extrabold"
+          className="flex gap-3 text-xl font-mono font-bold items-center"
           onClick={onClickLink}
         >
           <History className="h-8 w-8" />
@@ -46,7 +46,7 @@ export function Sidebar({
         </Link>
         <Link
           href="/settings"
-          className="flex gap-3 text-2xl font-extrabold"
+          className="flex gap-3 text-xl font-mono font-bold items-center"
           onClick={onClickLink}
         >
           <Settings className="h-8 w-8" />
@@ -63,7 +63,7 @@ export function Sidebar({
               alt="user-profile"
               className="rounded-full"
             />
-            <div className="text-xl font-extrabold">{username}</div>
+            <div className="text-xl font-montserrat font-bold">{username}</div>
           </>
         )}
       </div>

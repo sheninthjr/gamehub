@@ -179,7 +179,7 @@ export default function GameId() {
           </div>
         )}
       </div>
-      <div className="bg-[#202020] self-center flex flex-col justify-between h-96 w-[90%] md:w-[60%] lg:w-[40%] lg:h-[50vh] mt-20 rounded-xl text-white p-5">
+      <div className="border border-slate-200 self-center flex flex-col justify-between h-96 w-[90%] md:w-[60%] lg:w-[40%] lg:h-[50vh] mt-20 rounded-xl text-black p-5">
         <div
           className="flex flex-col-reverse h-full overflow-y-auto"
           ref={chatConntainerRef}
@@ -192,9 +192,9 @@ export default function GameId() {
               }`}
             >
               <div
-                className={`px-4 py-2 max-w-[70%] flex font-semibold justify-center items-center self-center gap-2 rounded-lg text-sm ${
+                className={`px-4 py-2 max-w-[70%] flex font-semibold border border-gray-200 justify-center items-center self-center gap-2 rounded-lg text-sm ${
                   msg.playerId === userId
-                    ? "bg-white/20 text-white self-end"
+                    ? "bg-white/20 text-black self-end"
                     : "bg-gray-100 text-black self-start"
                 }`}
               >
@@ -209,9 +209,12 @@ export default function GameId() {
             onChange={(e) => setChatInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Type your message..."
-            className="w-full p-2 text-white bg-white/10 outline-none rounded-xl"
+            className="w-full p-2 text-black bg-white/10 border border-slate-300 outline-none rounded-xl"
           />
-          <button onClick={sendMessage} className="bg-white/10 p-2 rounded-xl">
+          <button
+            onClick={sendMessage}
+            className="bg-white/10 border border-slate-300 p-2 rounded-xl"
+          >
             <SendHorizonal />
           </button>
         </div>

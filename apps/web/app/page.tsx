@@ -1,8 +1,10 @@
 "use client";
+import { DifficultyIcons } from "@/components/DifficultyIcons";
 import { mockdata } from "@/data/mockdata";
 import { useSocket } from "@/hooks/useSocket";
 import { MockData } from "@/types";
 import clsx from "clsx";
+import { List, Smile } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -48,11 +50,11 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pt-32 gap-y-9 max-w-6xl mx-auto justify-items-center p-8 auto-rows-min">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 pt-28 gap-y-9 max-w-6xl mx-auto justify-items-center p-8 auto-rows-min">
       {mockdata.map((value, index) => (
         <div
           key={index}
-          className="h-80 w-80 bg-secondary rounded-xl border border-slate-800 shadow-xl"
+          className="h-full w-80 bg-white rounded-xl border shadow-xl"
         >
           <button onClick={() => handleClick(value)} className="">
             <div className="relative">
@@ -65,20 +67,42 @@ export default function Home() {
                 {value.title.toUpperCase()}
               </div>
             </div>
-            <div className="p-4 flex flex-col space-y-3">
-              <div className="flex gap-3 items-center font-mono relative">
-                <div className="text-green-500 text-4xl animate-pulse absolute">
-                  •
+            <div className="px-4 py-2 flex flex-col space-y-2 mb-2">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-1 text-xs bg-slate-100 py-1 w-fit px-2 text-neutral-700 rounded-lg self-center">
+                  <List size={13} /> {value.category}
                 </div>
-                <div className="ml-5 mb-1 font-light text-neutral-400 text-sm">
-                  {liveUser[value.title as keyof typeof liveUser]} playing
+                <DifficultyIcons difficulty={value.difficulty} />
+              </div>
+              <div className="flex gap-3 justify-between items-center font-mono relative">
+                {value.title !== "codehub" && (
+                  <>
+                    <div className="text-green-500 text-4xl animate-pulse absolute">
+                      •
+                    </div>
+                    <div className="ml-5 mb-1 font-light text-neutral-400 text-sm">
+                      {liveUser[value.title as keyof typeof liveUser]} playing
+                    </div>
+                  </>
+                )}
+                <div className="text-sm py-2 flex justify-between items-center text-gray-500">
+                  <span
+                    className={clsx(
+                      "text-xs px-2 py-1 rounded-md",
+                      value.gameType === "Multiplayer"
+                        ? "bg-blue-100 text-blue-600"
+                        : "bg-purple-100 text-purple-600",
+                    )}
+                  >
+                    {value.gameType}
+                  </span>
                 </div>
               </div>
-              <div className="border border-neutral-800 rounded-xl text-sm py-2 flex justify-between w-full px-3 items-center gap-3">
+              <div className="border border-neutral-200 font-medium rounded-xl text-sm py-2 flex justify-between w-full px-3 items-center gap-3">
                 <span>Winning Probability</span>
                 <span
-                  className={clsx("p-0.5 px-1 rounded-md", {
-                    "bg-red-600": value.winningprobability <= 0.3,
+                  className={clsx("px-2 rounded-md font-medium text-white", {
+                    "bg-red-500": value.winningprobability <= 0.3,
                     "bg-yellow-500":
                       value.winningprobability > 0.3 &&
                       value.winningprobability < 0.7,

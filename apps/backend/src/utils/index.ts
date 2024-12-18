@@ -39,7 +39,7 @@ export function isDangerousCode(code: string): boolean {
 export function finalCode(
   code: string,
   language: Language,
-  problemId: string
+  problemId: string,
 ): string {
   const problem = Runner.find((p) => p.id === problemId);
   if (!problem) {

@@ -10,7 +10,6 @@ import jwt from "json-web-token";
 import { useParams } from "next/navigation";
 import { LANGUAGE_TYPE, Problems, ProblemType } from "@/data";
 import { PROBLEM_SECRET } from "@/config";
-import { CheckmarkIcon } from "react-hot-toast";
 import { CheckCheck, X } from "lucide-react";
 
 const SUBMISSION_BACKEND = "http://localhost:3003";
@@ -64,10 +63,10 @@ export default function CodeHub() {
             console.error(err);
           } else {
             setSubmissionResult(token);
-            console.log(token)
+            console.log(token);
             setOutput(token.testResults || []);
           }
-        }
+        },
       );
     } catch (error) {
       console.error("Error submitting code:", error);
@@ -86,7 +85,7 @@ export default function CodeHub() {
     setSelectedLanguage(language);
     if (currentProblem) {
       setCode(
-        currentProblem.code[selectedLanguage] || "# Write some code here"
+        currentProblem.code[selectedLanguage] || "# Write some code here",
       );
       setOutput([]);
     }
@@ -109,30 +108,30 @@ export default function CodeHub() {
       minSize={[300, 300]}
       className="flex split justify-start max-w-7xl mx-auto p-2 rounded-2xl mt-28 border border-neutral-700 h-[86vh]"
     >
-      <div className="w-1/2 p-4 flex flex-col space-y-3 overflow-y-auto text-white">
+      <div className="w-1/2 p-4 flex flex-col space-y-3 overflow-y-auto text-black">
         <ReactMarkdown
           className="markdown-content"
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw]}
           components={{
             h1: ({ children }) => (
-              <h1 className="text-2xl font-bold text-white mb-4">{children}</h1>
+              <h1 className="text-2xl font-bold text-black mb-4">{children}</h1>
             ),
             h2: ({ children }) => (
-              <h2 className="text-xl font-semibold text-white mt-4 mb-3">
+              <h2 className="text-xl font-semibold text-black mt-4 mb-3">
                 {children}
               </h2>
             ),
             ul: ({ children }) => (
-              <ul className="list-disc list-inside text-gray-300">
+              <ul className="list-disc list-inside text-gray-500">
                 {children}
               </ul>
             ),
             li: ({ children }) => (
-              <li className="text-gray-300 pl-4">{children}</li>
+              <li className="text-gray-500 pl-4">{children}</li>
             ),
             pre: ({ children }) => (
-              <pre className="bg-neutral-800 px-4 py-2 rounded-xl text-gray-200 overflow-x-auto">
+              <pre className="bg-neutral-800 px-4 py-2 rounded-xl text-gray-100 overflow-x-auto">
                 <code>{children}</code>
               </pre>
             ),
@@ -146,17 +145,17 @@ export default function CodeHub() {
           <div className="relative w-36 z-[999]">
             <button
               onClick={toggleDropdown}
-              className="bg-[#2F2F2F] text-white w-fit font-bold px-3 py-2 rounded-xl flex justify-between items-center"
+              className="bg-[#cccaca] text-black w-fit font-bold px-3 py-1 rounded-xl flex justify-between items-center"
             >
               {selectedLanguage.toUpperCase()}
             </button>
             {dropdownOpen && (
-              <div className="absolute top-11 left-0 w-32 bg-[#2F2F2F] rounded-xl shadow-lg">
+              <div className="absolute top-11 left-0 w-32 bg-[#cfcfcf] rounded-xl shadow-lg">
                 {languages.map((language) => (
                   <div
                     key={language}
                     onClick={() => handleLanguageSelect(language)}
-                    className="px-4 py-2 hover:bg-neutral-800 rounded-xl text-white cursor-pointer"
+                    className="px-4 py-2 hover:bg-neutral-400 rounded-xl text-black cursor-pointer"
                   >
                     {language.toUpperCase()}
                   </div>
@@ -165,7 +164,7 @@ export default function CodeHub() {
             )}
           </div>
           <button
-            className="text-green-500 font-bold px-2 py-1 rounded-xl bg-[#2F2F2F]"
+            className="text-green-500 font-bold px-2 py-1 rounded-xl border border-neutral-300 bg-[#f1f1f1]"
             onClick={submit}
           >
             Run
@@ -177,7 +176,7 @@ export default function CodeHub() {
             defaultValue="# Write your code here"
             value={code}
             language={selectedLanguage}
-            theme="vs-dark"
+            theme="light"
             className="h-[93%] rounded-xl pt-2"
             onChange={(value) => setCode(value || "")}
             options={{
@@ -189,7 +188,7 @@ export default function CodeHub() {
         </div>
         <div className="absolute bottom-1 w-full px-0 z-[999]">
           {submissionResult && output && (
-            <div className="mt-4 p-4 bg-neutral-800 rounded-xl text-white">
+            <div className="mt-4 p-4 bg-neutral-800 rounded-xl text-black">
               <h2 className="text-lg font-semibold mb-2">Test Case Results:</h2>
               <div className="flex justify-evenly gap-4">
                 {output.map((test, index) => (

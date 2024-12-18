@@ -14,12 +14,14 @@ export default function Id() {
           href={`/game/codehub/${id}/${problem.problemId}`}
           className="block hover:scale-105 transition-transform duration-300 ease-in-out"
         >
-          <div className="bg-[#151516] border h-56 border-[#151516] rounded-xl shadow-md hover:shadow-lg p-6 flex flex-col">
+          <div className="bg-white border h-56 border-[#828291] rounded-xl shadow-md hover:shadow-lg p-6 flex flex-col">
             <div className="mb-4">
-              <h2 className="text-2xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-black mb-2">
                 {problem.title}
               </h2>
-              <p className="text-lg text-gray-500">Problem ID: {problem.problemId}</p>
+              <p className="text-lg text-gray-500">
+                Problem ID: {problem.problemId}
+              </p>
             </div>
             <div className="mt-auto flex flex-wrap gap-2">
               {problem.language.map((lang) => (

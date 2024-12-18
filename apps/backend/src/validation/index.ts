@@ -9,7 +9,7 @@ import { Runner } from "../problems";
 export async function runDockerContainer(
   sourceFile: string,
   execFile: string,
-  language: Language
+  language: Language,
 ): Promise<string> {
   const dockerImage = getDockerImage(language);
   const tempDir = path.dirname(sourceFile);
@@ -96,15 +96,15 @@ export function evaluateProblem(stdout: string, problemId: string) {
 export function verifyTestCases(
   output: string,
   expectedOutput: any,
-  type: any
+  type: any,
 ): boolean {
   if (!output) return false;
   if (type === "numberarray") {
     const res = JSON.parse(output.trim()).map((x: any) =>
-      Array.isArray(x) ? x.map(Number) : Number(x)
+      Array.isArray(x) ? x.map(Number) : Number(x),
     );
     return res.every(
-      (value: any, index: any) => value === expectedOutput[index]
+      (value: any, index: any) => value === expectedOutput[index],
     );
   }
   const res =

@@ -125,7 +125,7 @@ export default function GameId() {
                 }`}
                 style={{
                   backgroundImage:
-                    "linear-gradient(to bottom, transparent 90%, rgba(0, 0, 0, 0.4))",
+                    "linear-gradient(to bottom, transparent 95%, rgba(0, 0, 0, 0.2))",
                 }}
               >
                 <div className="absolute bottom-0 left-0 w-full h-2 bg-white/10 rounded-b-xl"></div>

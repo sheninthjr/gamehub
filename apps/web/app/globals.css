@@ -13,8 +13,8 @@
 }
 
 body {
-  background-color: rgb(31, 31, 31);
-  color: white;
+  background-color: white;
+  color: black;
   font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 
@@ -23,16 +23,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #373737;
+  background: #cacaca;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #373737;
+  background: #a09e9e;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: black;
+  background: rgb(167, 167, 167);
 }
 
 .scroll-smooth {
