@@ -6,54 +6,76 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import axios from "axios";
+import jwt from "json-web-token";
 import { useParams } from "next/navigation";
 import { LANGUAGE_TYPE, Problems, ProblemType } from "@/data";
+import { PROBLEM_SECRET } from "@/config";
+import { CheckmarkIcon } from "react-hot-toast";
+import { CheckCheck, X } from "lucide-react";
 
 const SUBMISSION_BACKEND = "http://localhost:3003";
 
 type SubmissionResult = {
-  response: string;
-  error?: string;
+  testResults: {
+    testCaseNumber: number;
+    input: any[];
+    expectedOutput: any[];
+    actualOutput: any[];
+    passed: boolean;
+  }[];
+  totalTestCases: number;
+  passedTestCases: number;
+  status: string;
 };
 
 export default function CodeHub() {
-  const { gameId } = useParams();
+  const { problemId } = useParams();
   const [selectedLanguage, setSelectedLanguage] =
     useState<LANGUAGE_TYPE>("python");
   const [code, setCode] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submissionResult, setSubmissionResult] =
     useState<SubmissionResult | null>(null);
-    const [currentProblem,setCurrentProblem] = useState<ProblemType>()
-const [output,setOutput] = useState<string>("")
-  useEffect(() => {
-    const problems = Problems.find((p) => p.id === gameId);
-    if(problems) {
-      setCurrentProblem(problems);
-      setCode(problems.code[selectedLanguage || ""] || "")
-    }
-  },[gameId,selectedLanguage])
+  const [currentProblem, setCurrentProblem] = useState<ProblemType>();
+  const [output, setOutput] = useState<any[]>([]);
 
-  const copyToClipBoard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+  useEffect(() => {
+    const problems = Problems.find((p) => p.problemId === problemId);
+    if (problems) {
+      setCurrentProblem(problems);
+      setCode(problems.code[selectedLanguage || ""] || "");
+    }
+  }, [problemId, selectedLanguage]);
 
   const submit = async () => {
     try {
       const response = await axios.post(`${SUBMISSION_BACKEND}/submission`, {
         data: {
-          gameId,
+          problemId,
           code,
           selectedLanguage,
         },
       });
-      setSubmissionResult(response.data);
-      setOutput(response.data.response)
+      jwt.decode(
+        PROBLEM_SECRET as string,
+        response.data.response,
+        (err, token: any) => {
+          if (err) {
+            console.error(err);
+          } else {
+            setSubmissionResult(token);
+            console.log(token)
+            setOutput(token.testResults || []);
+          }
+        }
+      );
     } catch (error) {
       console.error("Error submitting code:", error);
       setSubmissionResult({
-        response: "",
-        error: "Failed to submit code. Please try again.",
+        testResults: [],
+        totalTestCases: 0,
+        passedTestCases: 0,
+        status: "Failed",
       });
     }
   };
@@ -62,21 +84,23 @@ const [output,setOutput] = useState<string>("")
 
   const handleLanguageSelect = (language: LANGUAGE_TYPE) => {
     setSelectedLanguage(language);
-    if(currentProblem) {
-      setCode(currentProblem.code[selectedLanguage] || "# Write some code here")
-      setOutput("")
+    if (currentProblem) {
+      setCode(
+        currentProblem.code[selectedLanguage] || "# Write some code here"
+      );
+      setOutput([]);
     }
     setDropdownOpen(false);
   };
 
   const languages: LANGUAGE_TYPE[] = ["cpp", "python", "java"];
 
-  if(!currentProblem) {
-    return(
+  if (!currentProblem) {
+    return (
       <div className="flex justify-center items-center h-screen text-white text-xl font-bold">
         OOPS problem not found!!
       </div>
-    )
+    );
   }
 
   return (
@@ -125,7 +149,6 @@ const [output,setOutput] = useState<string>("")
               className="bg-[#2F2F2F] text-white w-fit font-bold px-3 py-2 rounded-xl flex justify-between items-center"
             >
               {selectedLanguage.toUpperCase()}
-              <span className=""></span>
             </button>
             {dropdownOpen && (
               <div className="absolute top-11 left-0 w-32 bg-[#2F2F2F] rounded-xl shadow-lg">
@@ -165,14 +188,21 @@ const [output,setOutput] = useState<string>("")
           />
         </div>
         <div className="absolute bottom-1 w-full px-0 z-[999]">
-          {submissionResult && output &&  (
+          {submissionResult && output && (
             <div className="mt-4 p-4 bg-neutral-800 rounded-xl text-white">
-              <h2 className="text-lg font-semibold mb-2">Output:</h2>
-              <pre className="bg-black/40 px-4 py-2 rounded-xl text-gray-200 overflow-x-auto">
-                <code>
-                  {submissionResult.error || output}
-                </code>
-              </pre>
+              <h2 className="text-lg font-semibold mb-2">Test Case Results:</h2>
+              <div className="flex justify-evenly gap-4">
+                {output.map((test, index) => (
+                  <div
+                    key={index}
+                    className={`flex w-fit justify-evenly text-md px-4 font-bold py-2 rounded-xl ${
+                      test.passed ? "bg-green-700" : "bg-red-700"
+                    }`}
+                  >
+                    <span>{test.passed ? <CheckCheck /> : <X />}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

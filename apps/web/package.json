@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
+    "@next/env": "^15.1.1",
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "db": "*",
+    "json-web-token": "^3.2.0",
     "lucide-react": "^0.468.0",
     "next": "15.0.3",
     "next-auth": "^4.24.10",
