@@ -14,6 +14,7 @@ export class SudokuGame {
   public board: number[][];
   private finalBoard: number[][];
   public isGameOver: boolean;
+  private moves: number;
 
   constructor(gameId: string, playerId: string) {
     this.gameId = gameId;
@@ -22,6 +23,7 @@ export class SudokuGame {
     this.board = generateBoards.boardWithRemovedNumbers;
     this.finalBoard = generateBoards.filledBoard;
     this.isGameOver = false;
+    this.moves = 60;
   }
 
   click(gameId: string, row: number, col: number, num: number, ws: WebSocket) {
@@ -35,21 +37,25 @@ export class SudokuGame {
     }
 
     if (!this.isValid(row, col, num)) {
+      this.moves--;
       this.sendMessage(ws, MESSAGE_TYPES.INVALID_MOVE, {
         message: "Invalid move",
         row,
         col,
         num,
+        moves: this.moves,
       });
       return;
     }
 
     (this.board[row] as number[])[col] = num;
+    this.moves--;
     this.sendMessage(ws, MESSAGE_TYPES.CORRECT_MOVE, {
       message: "Correct Move",
       row,
       col,
       num,
+      moves: this.moves,
     });
 
     if (this.isGameCompleted()) {

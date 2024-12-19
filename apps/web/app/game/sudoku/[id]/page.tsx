@@ -10,7 +10,7 @@ export default function GameId() {
   const socket = useSocket();
   const [gameId, setGameId] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<number>(5 * 60);
+  const [moveLeft, setMoveLeft] = useState<number>(60);
 
   const [selectedCell, setSelectedCell] = useState<{
     row: number;
@@ -68,27 +68,20 @@ export default function GameId() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-      if (timeLeft === 45) {
-        toast("45 seconds left", {
+      if (moveLeft === 10) {
+        toast("10 moves left", {
           icon: "⏰",
           duration: 3000,
           position: "bottom-center",
         });
       }
-      if (timeLeft === 0) {
-        toast.error("Time's up!");
+      if (moveLeft === 0) {
+        toast.error("No moves left!");
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [moveLeft]);
 
   useEffect(() => {
     if (socket) {
@@ -102,14 +95,17 @@ export default function GameId() {
           const row = data.payload.row;
           const col = data.payload.col;
           const num = data.payload.num;
+          const moves = data.payload.moves;
           setBoard((prev) => {
             const newBoard = [...prev];
             newBoard[row][col] = num;
             return newBoard;
           });
+          setMoveLeft(moves);
         }
         if (data.type === "sudoku_invalid_move") {
           setMessage(data.payload.message);
+          setMoveLeft(data.payload.moves);
           toast.error(data.payload.message);
         }
         if (data.type === "sudoku_game_completed") {
@@ -180,12 +176,6 @@ export default function GameId() {
     }
   };
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, "0")}`;
-  };
-
   return (
     <div className="flex flex-col lg:flex-row justify-evenly items-center max-w-6xl mx-auto pt-32 relative">
       <Toaster
@@ -200,7 +190,7 @@ export default function GameId() {
             SUDOKU
           </div>
           <div className="font-montserrat text-xl mt-2">
-            Time Left: <span className="font-bold">{formatTime(timeLeft)}</span>
+            Moves Left: <span className="font-bold">{moveLeft}</span>
           </div>
         </div>
         <div className="grid grid-cols-9 gap-2 mt-4">

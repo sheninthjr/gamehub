@@ -64,7 +64,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/dashboard"
-            className={`${currentPath === "dashboard" && "text-3  xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
+            className={`${currentPath === "dashboard" && "text-3xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
           >
             Dashboard
           </Link>

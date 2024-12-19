@@ -12,6 +12,10 @@ model User {
   email String        @unique
   name  String
   image String
+  bio String?
+  favouriteGame String?
+  github String?
+  phone String?
   games GameHistory[]
 }
 
