@@ -9,7 +9,6 @@ export interface MockData {
   images: string;
   title: "mines" | "xoxo" | "sudoku" | "codehub";
   winningprobability: number;
-  description: string;
   category: GameCategory;
   difficulty: DifficultyLevel;
   gameType: GameType;

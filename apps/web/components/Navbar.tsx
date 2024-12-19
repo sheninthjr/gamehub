@@ -53,30 +53,30 @@ export function Navbar() {
           href="/"
           className="flex gap-2 items-center font-bold text-3xl font-montserrat"
         >
-          <Gamepad size={40} /> GAMEHUB
+          <Gamepad size={40} /> <p className="">GAMEHUB</p>
         </a>
         <div className="hidden lg:flex gap-10 top-4 left-1/2 absolute transform -translate-x-1/2 font-semibold justify-center text-lg self-center mx-auto items-center">
           <Link
             href="/"
-            className={`${currentPath === "home" && "text-2xl font-bold px-2 py-1 rounded-xl"} hover:scale-125`}
+            className={`${currentPath === "home" && "text-3xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
           >
             Home
           </Link>
           <Link
             href="/dashboard"
-            className={`${currentPath === "dashboard" && "text-2xl font-bold px-2 py-1 rounded-xl"} hover:scale-125`}
+            className={`${currentPath === "dashboard" && "text-3  xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
           >
             Dashboard
           </Link>
           <Link
             href="/history"
-            className={`${currentPath === "history" && "text-2xl font-bold px-2 py-1 rounded-xl"} hover:scale-125`}
+            className={`${currentPath === "history" && "text-3xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
           >
             History
           </Link>
           <Link
             href="/settings"
-            className={`${currentPath === "settings" && "text-2xl font-bold px-2 py-1 rounded-xl"} hover:scale-125`}
+            className={`${currentPath === "settings" && "text-3xl font-bold px-2 py-1 rounded-xl text-transparent bg-clip-text bg-gradient-to-r from-[#D6A2FF] to-[#8E44AD]"} hover:scale-125`}
           >
             Settings
           </Link>
@@ -112,7 +112,7 @@ export function Navbar() {
       </div>
       {toggleOpen && (
         <div className="fixed top-24 h-full shadow-lg max-w-7xl z-[999] w-full mx-auto">
-          <div className="w-80 bg-white/60 backdrop-blur-xl backdrop-brightness-75 h-[87%] rounded-xl">
+          <div className="w-80 backdrop-blur-xl backdrop-brightness-75 h-[87%] rounded-xl">
             <Sidebar setToggleOpen={setToggleOpen} />
           </div>
         </div>

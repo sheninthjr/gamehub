@@ -54,10 +54,10 @@ export default function Home() {
       {mockdata.map((value, index) => (
         <div
           key={index}
-          className="h-full w-80 bg-white rounded-xl border shadow-xl"
+          className="h-full w-80 rounded-xl shadow-md shadow-purple-500 border border-t border-amber-800 hover:scale-105"
         >
           <button onClick={() => handleClick(value)} className="">
-            <div className="relative">
+            <div className="relative rounded-xl">
               <img
                 src={value.images}
                 alt="thumbnail"
@@ -98,7 +98,7 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-              <div className="border border-neutral-200 font-medium rounded-xl text-sm py-2 flex justify-between w-full px-3 items-center gap-3">
+              <div className="border border-purple-800 font-medium rounded-xl text-sm py-2 flex justify-between w-full px-3 items-center gap-3">
                 <span>Winning Probability</span>
                 <span
                   className={clsx("px-2 rounded-md font-medium text-white", {
