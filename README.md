@@ -5,3 +5,4 @@
 - XOXO
 - Mines
 - Sudoku
+- CodeHub

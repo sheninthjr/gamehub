@@ -108,27 +108,27 @@ export default function CodeHub() {
       minSize={[300, 300]}
       className="flex split justify-start max-w-7xl mx-auto p-2 rounded-2xl mt-28 border border-neutral-700 h-[86vh]"
     >
-      <div className="w-1/2 p-4 flex flex-col space-y-3 overflow-y-auto text-black">
+      <div className="w-1/2 p-4 flex flex-col space-y-3 overflow-y-auto text-white">
         <ReactMarkdown
           className="markdown-content"
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeRaw]}
           components={{
             h1: ({ children }) => (
-              <h1 className="text-2xl font-bold text-black mb-4">{children}</h1>
+              <h1 className="text-2xl font-bold text-white mb-4">{children}</h1>
             ),
             h2: ({ children }) => (
-              <h2 className="text-xl font-semibold text-black mt-4 mb-3">
+              <h2 className="text-xl font-semibold text-white mt-4 mb-3">
                 {children}
               </h2>
             ),
             ul: ({ children }) => (
-              <ul className="list-disc list-inside text-gray-500">
+              <ul className="list-disc list-inside text-gray-300">
                 {children}
               </ul>
             ),
             li: ({ children }) => (
-              <li className="text-gray-500 pl-4">{children}</li>
+              <li className="text-gray-300 pl-4">{children}</li>
             ),
             pre: ({ children }) => (
               <pre className="bg-neutral-800 px-4 py-2 rounded-xl text-gray-100 overflow-x-auto">
@@ -140,22 +140,22 @@ export default function CodeHub() {
           {currentProblem.problemStatement}
         </ReactMarkdown>
       </div>
-      <div className="w-1/2 px-1 py-1 relative">
+      <div className="w-1/2 px-1 py-1 relative bg-white">
         <div className="flex justify-between z-[999]">
           <div className="relative w-36 z-[999]">
             <button
               onClick={toggleDropdown}
-              className="bg-[#cccaca] text-black w-fit font-bold px-3 py-1 rounded-xl flex justify-between items-center"
+              className="bg-[#050505] text-white w-fit font-bold px-3 py-1 rounded-xl flex justify-between items-center"
             >
               {selectedLanguage.toUpperCase()}
             </button>
             {dropdownOpen && (
-              <div className="absolute top-11 left-0 w-32 bg-[#cfcfcf] rounded-xl shadow-lg">
+              <div className="absolute top-11 left-0 w-32 bg-[#050505] rounded-xl shadow-lg">
                 {languages.map((language) => (
                   <div
                     key={language}
                     onClick={() => handleLanguageSelect(language)}
-                    className="px-4 py-2 hover:bg-neutral-400 rounded-xl text-black cursor-pointer"
+                    className="px-4 py-2 hover:bg-neutral-700 rounded-xl text-white cursor-pointer"
                   >
                     {language.toUpperCase()}
                   </div>
@@ -164,7 +164,7 @@ export default function CodeHub() {
             )}
           </div>
           <button
-            className="text-green-500 font-bold px-2 py-1 rounded-xl border border-neutral-300 bg-[#f1f1f1]"
+            className="text-green-500 font-bold px-2 py-1 rounded-xl border border-neutral-500 bg-[#050505]"
             onClick={submit}
           >
             Run
@@ -188,7 +188,7 @@ export default function CodeHub() {
         </div>
         <div className="absolute bottom-1 w-full px-0 z-[999]">
           {submissionResult && output && (
-            <div className="mt-4 p-4 bg-neutral-800 rounded-xl text-black">
+            <div className="mt-4 p-4 bg-neutral-800 rounded-xl text-white">
               <h2 className="text-lg font-semibold mb-2">Test Case Results:</h2>
               <div className="flex justify-evenly gap-4">
                 {output.map((test, index) => (
